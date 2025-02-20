@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🍷 AI Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        #chat-container { width: 400px; margin: 100px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        #messages { height: 300px; overflow-y: scroll; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; }
+        input[type="text"] { width: 80%; padding: 10px; }
+        button { padding: 10px; }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h3>🍷 Wine Classifier Chatbot</h3>
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="Enter wine details..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            const messages = document.getElementById('messages');
+
+            // Display user message
+            messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
+
+            // Prepare the payload (for simplicity, using static data)
+            const data = {
+                alcohol: 13.0,
+                malic_acid: 2.0,
+                ash: 2.3,
+                alcalinity_of_ash: 15.0,
+                magnesium: 100,
+                total_phenols: 2.5,
+                flavanoids: 2.0,
+                nonflavanoid_phenols: 0.3,
+                proanthocyanins: 1.5,
+                color_intensity: 5.0,
+                hue: 1.0,
+                od280_od315_of_diluted_wines: 3.0,
+                proline: 1000
+            };
+
+            // Send to Flask API
+            fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                messages.innerHTML += `<div><strong>Bot:</strong> Predicted Wine Class: ${data.predicted_class}</div>`;
+                document.getElementById('userInput').value = '';
+            })
+            .catch(error => {
+                messages.innerHTML += `<div><strong>Bot:</strong> Error: ${error}</div>`;
+            });
+        }
+    </script>
+</body>
+</html>
