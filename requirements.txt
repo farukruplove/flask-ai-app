@@ -1,4 +1,6 @@
+Flask
 tensorflow
+joblib
 numpy
 pandas
-joblib
+gunicorn
