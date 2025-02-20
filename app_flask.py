@@ -1,15 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import joblib
 import pandas as pd
 
 app = Flask(__name__)
 
-# Load the saved model
+# Load model
 model = joblib.load('rf_model.joblib')
 
 @app.route('/')
 def home():
-    return "<h1>🍷 Wine Classifier API</h1><p>Use POST /predict to make predictions.</p>"
+    return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
