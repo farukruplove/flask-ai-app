@@ -1,6 +1,7 @@
 Flask
 tensorflow
 joblib
+dill
 numpy
 pandas
 gunicorn
