@@ -7,41 +7,32 @@ import numpy as np
 # Initialize Flask app
 app = Flask(__name__)
 
-# Load the trained Keras model
-model = load_model('model.h5')
+# Load the new Keras model
+model = load_model('model.h5')  # ✅ Use model.h5
 
-# Load the tokenizer and label encoder
+# Load tokenizer and label encoder
 tokenizer = joblib.load('tokenizer.joblib')
 label_encoder = joblib.load('label_encoder.joblib')
 
-# Maximum sequence length (used during training)
+# Max sequence length (used during training)
 MAX_LEN = model.input_shape[1]
 
-# ------------------------------
-# 1️⃣ Home Route (Web Interface)
-# ------------------------------
 @app.route('/')
 def home():
     return render_template('index.html')
 
-# ------------------------------
-# 2️⃣ Prediction API Route
-# ------------------------------
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Get user message from JSON payload
         data = request.get_json()
         user_input = data.get('user_message', '')
 
-        # Preprocess: tokenize and pad the input text
+        # Tokenize and pad input
         seq = tokenizer.texts_to_sequences([user_input])
         padded_seq = pad_sequences(seq, maxlen=MAX_LEN, padding='post')
 
-        # Make prediction
+        # Predict
         prediction = model.predict(padded_seq)[0][0]
-
-        # Decode label (if binary classification)
         sentiment = 'positive' if prediction > 0.5 else 'negative'
 
         return jsonify({
@@ -53,8 +44,5 @@ def predict():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-# ------------------------------
-# 3️⃣ Run Flask App
-# ------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
