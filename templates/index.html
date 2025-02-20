@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>🍷 Wine Classifier Chatbot</title>
+    <title>Text Classifier Chatbot</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
         #chat-container { width: 400px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         #messages { height: 300px; overflow-y: scroll; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; }
-        input[type="text"] { width: 80%; padding: 10px; }
-        button { padding: 10px; }
+        input[type="text"], button { width: 90%; padding: 10px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div id="chat-container">
-        <h3>🍷 Wine Classifier Chatbot</h3>
+        <h3>💡 Text Classifier Chatbot</h3>
         <div id="messages"></div>
-        <input type="text" id="userInput" placeholder="Enter alcohol, malic_acid, etc." />
+
+        <input type="text" id="userInput" placeholder="Enter your message..."/>
         <button onclick="sendMessage()">Send</button>
     </div>
 
@@ -28,32 +28,15 @@
             // Display user message
             messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
 
-            // Example static data (you can parse userInput to dynamic JSON)
-            const data = {
-                alcohol: 13.0,
-                malic_acid: 2.0,
-                ash: 2.3,
-                alcalinity_of_ash: 15.0,
-                magnesium: 100,
-                total_phenols: 2.5,
-                flavanoids: 2.0,
-                nonflavanoid_phenols: 0.3,
-                proanthocyanins: 1.5,
-                color_intensity: 5.0,
-                hue: 1.0,
-                od280_od315_of_diluted_wines: 3.0,
-                proline: 1000
-            };
-
             // Send POST request to Flask API
             fetch('/predict', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify({ user_message: userInput })
             })
             .then(response => response.json())
             .then(data => {
-                messages.innerHTML += `<div><strong>Bot:</strong> Predicted Wine Class: ${data.predicted_class}</div>`;
+                messages.innerHTML += `<div><strong>Bot:</strong> Predicted Class: ${data.predicted_class} (${data.confidence})</div>`;
                 document.getElementById('userInput').value = '';
             })
             .catch(error => {
