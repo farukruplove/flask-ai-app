@@ -1,3 +1,6 @@
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Force TensorFlow to use CPU
+
 from flask import Flask, request, jsonify, render_template
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -7,14 +10,13 @@ import numpy as np
 # Initialize Flask app
 app = Flask(__name__)
 
-# Load the new Keras model
-model = load_model('model.h5')  # ✅ Use model.h5
+# Load the Keras model
+model = load_model('model.h5')
 
 # Load tokenizer and label encoder
 tokenizer = joblib.load('tokenizer.joblib')
 label_encoder = joblib.load('label_encoder.joblib')
 
-# Max sequence length (used during training)
 MAX_LEN = model.input_shape[1]
 
 @app.route('/')
