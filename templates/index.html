@@ -2,20 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>🍷 AI Chatbot</title>
+    <title>🍷 Wine Classifier Chatbot</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
-        #chat-container { width: 400px; margin: 100px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        #chat-container { width: 400px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         #messages { height: 300px; overflow-y: scroll; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; }
         input[type="text"] { width: 80%; padding: 10px; }
         button { padding: 10px; }
     </style>
 </head>
 <body>
+
     <div id="chat-container">
         <h3>🍷 Wine Classifier Chatbot</h3>
         <div id="messages"></div>
-        <input type="text" id="userInput" placeholder="Enter wine details..." />
+        <input type="text" id="userInput" placeholder="Enter alcohol, malic_acid, etc." />
         <button onclick="sendMessage()">Send</button>
     </div>
 
@@ -27,7 +28,7 @@
             // Display user message
             messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
 
-            // Prepare the payload (for simplicity, using static data)
+            // Example static data (you can parse userInput to dynamic JSON)
             const data = {
                 alcohol: 13.0,
                 malic_acid: 2.0,
@@ -44,7 +45,7 @@
                 proline: 1000
             };
 
-            // Send to Flask API
+            // Send POST request to Flask API
             fetch('/predict', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -60,5 +61,6 @@
             });
         }
     </script>
+
 </body>
 </html>
